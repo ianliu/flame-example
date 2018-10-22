@@ -13,16 +13,17 @@ const SPEED = 250.0;
 const CRATE_SIZE = 64.0;
 
 var points = 0;
+var rnd = Random();
 
 main() async {
   Flame.audio.disableLog();
   Flame.images.loadAll(['explosion.png', 'crate.png']);
 
-  var game = new MyGame();
+  var game = MyGame();
   runApp(game.widget);
 
   Flame.audio.loop('music.ogg');
-  Flame.util.addGestureRecognizer(new TapGestureRecognizer()
+  Flame.util.addGestureRecognizer(TapGestureRecognizer()
     ..onTapDown = (TapDownDetails evt) => game.input(evt.globalPosition));
 }
 
@@ -64,18 +65,18 @@ class Crate extends SpriteComponent {
 class Explosion extends AnimationComponent {
   static const TIME = 0.75;
 
-  Explosion(Crate crate) : super.sequenced(CRATE_SIZE, CRATE_SIZE, 'explosion.png', 7, textureWidth: 31.0, textureHeight: 31.0) {
+  Explosion(Crate crate)
+      : super.sequenced(CRATE_SIZE, CRATE_SIZE, 'explosion.png', 7,
+            textureWidth: 31.0, textureHeight: 31.0) {
     this.x = crate.x;
     this.y = crate.y;
     this.animation.stepTime = TIME / 7;
   }
 
   bool destroy() {
-    return this.animation.lifeTime >= TIME;
+    return this.animation.elapsed >= TIME;
   }
 }
-
-Random rnd = new Random();
 
 class MyGame extends BaseGame {
   double creationTimer = 0.0;
@@ -87,8 +88,8 @@ class MyGame extends BaseGame {
     String text = points.toString();
     TextPainter p = Flame.util
         .text(text, color: Colors.white, fontSize: 48.0, fontFamily: 'Halo');
-    p.paint(canvas,
-        new Offset(size.width - p.width - 10, size.height - p.height - 10));
+    p.paint(
+        canvas, Offset(size.width - p.width - 10, size.height - p.height - 10));
   }
 
   @override
@@ -96,7 +97,7 @@ class MyGame extends BaseGame {
     creationTimer += t;
     if (creationTimer >= 1) {
       creationTimer = 0.0;
-      add(new Crate());
+      add(Crate());
     }
     super.update(t);
   }
@@ -110,7 +111,7 @@ class MyGame extends BaseGame {
       bool remove = crate.toRect().contains(position);
       if (remove) {
         crate.explode = true;
-        add(new Explosion(crate));
+        add(Explosion(crate));
         Flame.audio.play('explosion.mp3');
         points += 10;
       }

@@ -1,11 +1,13 @@
 name: flame_example
 description: A new Flutter project.
 
+version: 0.9.5+1
+
 dependencies:
   flutter:
     sdk: flutter
-  flame: 0.8.3
-  cupertino_icons: ^0.1.0
+  flame: 0.9.5
+  cupertino_icons: ^0.1.2
 
 dev_dependencies:
   flutter_test:
